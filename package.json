@@ -1,0 +1,37 @@
+{
+	"name": "google-oauth-jwt",
+	"version": "0.0.1",
+	"author": {
+		"name": "Nicolas Mercier",
+		"email": "nicolas@extrabacon.net"
+	},
+	"description": "Implementation of Google OAuth 2.0 for server-to-server interactions, allowing secure use of Google APIs without the end-user being involved.",
+	"keywords": [
+		"google",
+		"api",
+		"oauth",
+		"oauth 2.0",
+		"oauth2",
+		"service account",
+		"jwt",
+		"token",
+		"server to server"
+	],
+	"dependencies": {
+		"request": "*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/extrabacon/google-oauth-jwt"
+	},
+	"homepage": "http://github.com/extrabacon/google-oauth-jwt",
+	"bugs": "http://github.com/extrabacon/google-oauth-jwt/issues",
+	"licenses": [
+		{
+			"type": "MIT"
+		}
+	],
+	"engines": {
+		"node": ">=0.8"
+	}
+}
