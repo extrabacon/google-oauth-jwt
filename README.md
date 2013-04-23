@@ -3,9 +3,9 @@
 Google OAuth 2.0 authentication for server-to-server applications with Node.js.
 
 This library generates [JWT](http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html) tokens to establish
-identity to an API, without an end-user being involved, which is the ideal scenario for server-side communications.
-It can be used as a foundation for Google APIs requiring access to user data (such as Google Drive, Google
-Calendar, etc.) for which web-based callbacks and user authorization prompts are not appropriate.
+identity to an API, without an end-user being involved. This is the preferred scenario for server-side communications.
+It can be used to interact with Google APIs requiring access to user data (such as Google Drive, Calendar, etc.) for
+which web-based callbacks and user authorization prompts are not appropriate.
 
 Tokens are generated for a service account, which is created from the Google API console. Service accounts must also
 be granted access to resources, using traditional assignation of permissions using the unique service account email
@@ -52,7 +52,7 @@ account, using its email address.
 For example, in order to list files in Google Drive, folders and files must be shared with the service account email
 address.
 
-### Querying a RESTful Google API with request
+### Querying a RESTful Google API with "request"
 
 In this example, we use a modified instance of [request](https://github.com/mikeal/request) to query the
 Google Drive API. The modified request module handles the token automatically using a `jwt` setting passed to
@@ -63,15 +63,15 @@ the `request` function.
 var request = require('google-oauth-jwt').requestWithJWT();
 
 request({
-	url: 'https://www.googleapis.com/drive/v2/files',
-	jwt: {
+  url: 'https://www.googleapis.com/drive/v2/files',
+  jwt: {
     // use the email address of the service account, as seen in the API console
-		email: 'my-service-account@developer.gserviceaccount.com',
-		// use the PEM file we generated from the downloaded key
-		keyFile: 'my-service-account-key.pem',
-		// specify the scopes you wish to access - each application has different scopes
-		scopes: ['https://www.googleapis.com/auth/drive.readonly']
-	}
+    email: 'my-service-account@developer.gserviceaccount.com',
+    // use the PEM file we generated from the downloaded key
+    keyFile: 'my-service-account-key.pem',
+    // specify the scopes you wish to access - each application has different scopes
+    scopes: ['https://www.googleapis.com/auth/drive.readonly']
+  }
 }, function (err, res, body) {
 
 	console.log(JSON.parse(body));
