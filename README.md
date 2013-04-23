@@ -2,7 +2,7 @@
 
 Google OAuth 2.0 authentication for server-to-server applications with Node.js.
 
-This library generates [http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html](JWT) tokens to establish
+This library generates [JWT](http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html) tokens to establish
 identity to an API, without an end-user being involved, which is the ideal scenario for server-side communications.
 It can be used as a foundation for Google APIs requiring access to user data (such as Google Drive, Google
 Calendar, etc.) for which web-based callbacks and user authorization prompts are not appropriate.
@@ -12,10 +12,10 @@ be granted access to resources, using traditional assignation of permissions usi
 address.
 
 The authentication process is implemented following the specifications found
-[https://developers.google.com/accounts/docs/OAuth2ServiceAccount](here).
+[here](https://developers.google.com/accounts/docs/OAuth2ServiceAccount).
 
-The package also integrates with [https://github.com/mikeal/request](request) to seamlessly query Google RESTful APIs,
-which is optional. Integration with [https://github.com/mikeal/request](request) provides automatic requesting of
+The package also integrates with [request](https://github.com/mikeal/request) to seamlessly query Google RESTful APIs,
+which is optional. Integration with [request](https://github.com/mikeal/request) provides automatic requesting of
 tokens, as well as token caching.
 
 ## Documentation
@@ -27,13 +27,15 @@ npm install google-oauth-jwt
 
 ### Generating a key to sign the tokens
 
-1. From the [https://code.google.com/apis/console/](Google API Console), create a
-   [https://developers.google.com/console/help/#service_accounts](service account).
+1. From the [Google API Console](https://code.google.com/apis/console/), create a
+  [service account](https://developers.google.com/console/help/#service_accounts).
 
 2. Download the generated P12 key.
+
    IMPORTANT: keep a copy of the key, Google keeps only the public key.
 
 3. Convert the key to PEM, so we can use it from the Node crypto module.
+
    To do this, run the following in Terminal:
    ```bash
    openssl pkcs12 -in downloaded-key-file.p12 -out your-key-file.pem -nodes
@@ -52,7 +54,7 @@ address.
 
 ### Querying a RESTful Google API with request
 
-In this example, we use a modified instance of [https://github.com/mikeal/request](request) to query the
+In this example, we use a modified instance of [request](https://github.com/mikeal/request) to query the
 Google Drive API. The modified request module handles the token automatically using a `jwt` setting passed to
 the `request` function.
 
@@ -67,7 +69,7 @@ request({
 		email: 'my-service-account@developer.gserviceaccount.com',
 		// use the PEM file we generated from the downloaded key
 		keyFile: 'my-service-account-key.pem',
-		// specify the scopes you which to access - each application has different scopes
+		// specify the scopes you wish to access - each application has different scopes
 		scopes: ['https://www.googleapis.com/auth/drive.readonly']
 	}
 }, function (err, res, body) {
@@ -115,6 +117,8 @@ var options = {
 
   // an array of scopes uris to request access to (required)
   // different scopes are available for each application (refer to the app documentation)
+  // scopes are NOT permission levels, but limitations applied to the API access
+  // so remember to also grant permissions for the application!
   scopes: [...],
 
   // the cryptographic key as a string, can be the contents of the PEM file
@@ -131,10 +135,15 @@ var options = {
 
   // if access is being granted on behalf of someone else, specifies who is impersonating the service account
   delegationEmail: 'email_address'
+
 };
 ```
 
-More information:
+Options are used for the `authenticate` method, as well as the `jwt` settings passed to
+[request](https://github.com/mikeal/request). Internally, they are used to encode the JWT that will be sent to
+Google in order to issue a token that can then be used for the APIs.
+
+For more information:
 [https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset](https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset)
 
 ## Compatibility
