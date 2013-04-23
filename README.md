@@ -5,7 +5,7 @@ Google OAuth 2.0 authentication for server-to-server applications with Node.js.
 This library generates [JWT](http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html) tokens to establish
 identity to an API, without an end-user being involved. This is the preferred scenario for server-side communications.
 It can be used to interact with Google APIs requiring access to user data (such as Google Drive, Calendar, etc.) for
-which web-based callbacks and user authorization prompts are not appropriate.
+which URL-based callbacks and user authorization prompts are not appropriate.
 
 Tokens are generated for a service account, which is created from the Google API console. Service accounts must also
 be granted access to resources, using traditional assignation of permissions using the unique service account email
@@ -50,7 +50,7 @@ has security settings must be configured individually. Access is granted by assi
 account, using its email address.
 
 For example, in order to list files in Google Drive, folders and files must be shared with the service account email
-address.
+address. Likewise, to access a calendar, the calendar must be shared with the service account.
 
 ### Querying a RESTful Google API with "request"
 
@@ -79,7 +79,7 @@ request({
 });
 ```
 
-Note that the `options` object includes a `jwt` object we use to configure the token generation. The token will
+Note that the `options` object includes a `jwt` object we use to configure how to encode the JWT. The token will then
 automatically be requested and inserted in the query string for this API call. It will also be cached and
 reused for subsequent calls using the same service account and scopes.
 
@@ -100,6 +100,25 @@ googleAuth.authenticate({
 }, function (err, token) {
 
   console.log(token);
+
+});
+```
+
+It is also possible to encode the JWT manually using the `encodeJWT` method.
+
+```javascript
+var googleAuth = require('google-oauth-jwt');
+
+googleAuth.encodeJWT({
+  // use the email address of the service account, as seen in the API console
+  email: 'my-service-account@developer.gserviceaccount.com',
+  // use the PEM file we generated from the downloaded key
+  keyFile: 'my-service-account-key.pem',
+  // specify the scopes you which to access
+  scopes: ['https://www.googleapis.com/auth/drive.readonly']
+}, function (err, jwt) {
+
+  console.log(jwt);
 
 });
 ```
@@ -145,6 +164,11 @@ Google in order to issue a token that can then be used for the APIs.
 
 For more information:
 [https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset](https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset)
+
+## Changelog
+
+* 0.0.2: improved error handling and documentation
+* 0.0.1: initial version
 
 ## Compatibility
 
