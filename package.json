@@ -5,13 +5,11 @@
 		"name": "Nicolas Mercier",
 		"email": "nicolas@extrabacon.net"
 	},
-	"description": "Implementation of Google OAuth 2.0 for server-to-server interactions, allowing secure use of Google APIs without the end-user being involved.",
+	"description": "Implementation of Google OAuth 2.0 for server-to-server interactions, allowing secure use of Google APIs without interaction from an end-user.",
 	"keywords": [
 		"google",
 		"api",
 		"oauth",
-		"oauth 2.0",
-		"oauth2",
 		"service account",
 		"jwt",
 		"token",
@@ -26,11 +24,6 @@
 	},
 	"homepage": "http://github.com/extrabacon/google-oauth-jwt",
 	"bugs": "http://github.com/extrabacon/google-oauth-jwt/issues",
-	"licenses": [
-		{
-			"type": "MIT"
-		}
-	],
 	"engines": {
 		"node": ">=0.8"
 	}
