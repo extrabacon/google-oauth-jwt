@@ -95,12 +95,10 @@ googleAuth.authenticate({
   email: 'my-service-account@developer.gserviceaccount.com',
   // use the PEM file we generated from the downloaded key
   keyFile: 'my-service-account-key.pem',
-  // specify the scopes you which to access
+  // specify the scopes you wish to access
   scopes: ['https://www.googleapis.com/auth/drive.readonly']
 }, function (err, token) {
-
   console.log(token);
-
 });
 ```
 
@@ -116,12 +114,10 @@ tokens.get({
   email: 'my-service-account@developer.gserviceaccount.com',
   // use the PEM file we generated from the downloaded key
   keyFile: 'my-service-account-key.pem',
-  // specify the scopes you which to access
+  // specify the scopes you wish to access
   scopes: ['https://www.googleapis.com/auth/drive.readonly']
 }, function (err, token) {
-
   console.log(token);
-
 });
 ```
 
@@ -143,9 +139,7 @@ googleAuth.encodeJWT({
   // specify the scopes you which to access
   scopes: ['https://www.googleapis.com/auth/drive.readonly']
 }, function (err, jwt) {
-
   console.log(jwt);
-
 });
 ```
 
@@ -187,9 +181,8 @@ var options = {
 };
 ```
 
-Options are used for the `authenticate` method, as well as the `jwt` settings passed to
-[request](https://github.com/mikeal/request). Internally, they are used to encode the JWT that will be sent to
-Google in order to issue a token that can then be used for the APIs.
+Options are used to encode the JWT that will be sent to Google OAuth servers in order to issue a token that can then be
+used for the APIs.
 
 For more information:
 [https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset](https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset)
