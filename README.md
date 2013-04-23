@@ -16,7 +16,7 @@ The authentication process is implemented following the specifications found
 
 The package also integrates with [request](https://github.com/mikeal/request) to seamlessly query Google RESTful APIs,
 which is optional. Integration with [request](https://github.com/mikeal/request) provides automatic requesting of
-tokens, as well as token caching.
+tokens, as well as built-in token caching.
 
 ## Documentation
 
@@ -47,7 +47,7 @@ npm install google-oauth-jwt
 
 In order to query resources using the API, access must be granted to the service account. Each Google application that
 has security settings must be configured individually. Access is granted by assigning permissions to the service
-account, using its email address.
+account, using its email address found in the API console.
 
 For example, in order to list files in Google Drive, folders and files must be shared with the service account email
 address. Likewise, to access a calendar, the calendar must be shared with the service account.
@@ -73,9 +73,7 @@ request({
     scopes: ['https://www.googleapis.com/auth/drive.readonly']
   }
 }, function (err, res, body) {
-
 	console.log(JSON.parse(body));
-
 });
 ```
 
@@ -164,7 +162,7 @@ var options = {
   // the key will be used to sign the JWT and validated by Google OAuth
   key: 'KEY_CONTENTS',
 
-  // the path to the PEM file to use for the cryptographic key (ignored is 'key' is also defined)
+  // the path to the PEM file to use for the cryptographic key (ignored if 'key' is also defined)
   // the key will be used to sign the JWT and validated by Google OAuth
   keyFile: 'path_to/key.pem',
 
@@ -173,9 +171,9 @@ var options = {
   expiration: 3600000,
 
   // if access is being granted on behalf of someone else, specifies who is impersonating the service account
-  delegationEmail: 'email_address',
+  delegationEmail: 'email_address@mycompany.com',
 
-  // turns on console logging for debugging
+  // turns on simple console logging for debugging
   debug: false
 
 };
@@ -200,7 +198,7 @@ For more information:
 
 ## Dependencies
 
-+ request
++ [request](https://github.com/mikeal/request)
 
 ## License
 
