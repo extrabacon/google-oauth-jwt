@@ -104,6 +104,32 @@ googleAuth.authenticate({
 });
 ```
 
+If you want to use the built-in token cache, use the `TokenCache` class. Tokens are cached using the email address and
+the scopes as the key.
+
+```javascript
+var TokenCache = require('google-oauth-jwt').TokenCache,
+    tokens = new TokenCache();
+
+tokens.get({
+  // use the email address of the service account, as seen in the API console
+  email: 'my-service-account@developer.gserviceaccount.com',
+  // use the PEM file we generated from the downloaded key
+  keyFile: 'my-service-account-key.pem',
+  // specify the scopes you which to access
+  scopes: ['https://www.googleapis.com/auth/drive.readonly']
+}, function (err, token) {
+
+  console.log(token);
+
+});
+```
+
+Using `TokenCache` will request only one token for multiple concurrent requests to `get`. A new token request will
+automatically be issued if the token is expired.
+
+### Encoding JWT manually
+
 It is also possible to encode the JWT manually using the `encodeJWT` method.
 
 ```javascript
@@ -153,7 +179,10 @@ var options = {
   expiration: 3600000,
 
   // if access is being granted on behalf of someone else, specifies who is impersonating the service account
-  delegationEmail: 'email_address'
+  delegationEmail: 'email_address',
+
+  // turns on console logging for debugging
+  debug: false
 
 };
 ```
@@ -167,6 +196,7 @@ For more information:
 
 ## Changelog
 
+* 0.0.3: introduction of TokenCache
 * 0.0.2: improved error handling and documentation
 * 0.0.1: initial version
 
