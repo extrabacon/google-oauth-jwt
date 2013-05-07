@@ -187,6 +187,7 @@ For more information:
 
 ## Changelog
 
+* 0.0.4: fixed pending callbacks accumulating indefinitely in TokenCache
 * 0.0.3: introduction of TokenCache
 * 0.0.2: improved error handling and documentation
 * 0.0.1: initial version
