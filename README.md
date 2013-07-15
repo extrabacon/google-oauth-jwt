@@ -187,6 +187,7 @@ For more information:
 
 ## Changelog
 
+* 0.0.6: fixed request function call when using a URI string without options
 * 0.0.5: token now passed using Authorization header (thank you jpd236)
 * 0.0.4: fixed pending callbacks accumulating indefinitely in TokenCache
 * 0.0.3: introduction of TokenCache
