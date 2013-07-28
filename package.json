@@ -1,6 +1,6 @@
 {
 	"name": "google-oauth-jwt",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"author": {
 		"name": "Nicolas Mercier",
 		"email": "nicolas@extrabacon.net"
