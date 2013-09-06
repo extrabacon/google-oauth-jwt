@@ -3,7 +3,7 @@
 Google OAuth 2.0 authentication for server-to-server applications with Node.js.
 
 This library generates [JWT](http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html) tokens to establish
-identity to an API, without an end-user being involved. This is the preferred scenario for server-side communications.
+identity for an API, without an end-user being involved. This is the preferred scenario for server-side communications.
 It can be used to interact with Google APIs requiring access to user data (such as Google Drive, Calendar, etc.) for
 which URL-based callbacks and user authorization prompts are not appropriate.
 
@@ -14,7 +14,7 @@ address.
 The authentication process is implemented following the specifications found
 [here](https://developers.google.com/accounts/docs/OAuth2ServiceAccount).
 
-The package also integrates with [request](https://github.com/mikeal/request) to seamlessly query Google RESTful APIs,
+This package also integrates with [request](https://github.com/mikeal/request) to seamlessly query Google RESTful APIs,
 which is optional. Integration with [request](https://github.com/mikeal/request) provides automatic requesting of
 tokens, as well as built-in token caching.
 
