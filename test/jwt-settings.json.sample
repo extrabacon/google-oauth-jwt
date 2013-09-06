@@ -1,0 +1,6 @@
+{
+  "email": "email_address_of_your_service_account",
+  "scopes": ["scopes_to_use_for_your_tests"],
+  "keyFile": "path/to/key.pem",
+  "test_url": "https://www.googleapis.com/your-favorite-api"
+}

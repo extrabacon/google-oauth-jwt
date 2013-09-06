@@ -5,4 +5,3 @@ exports.TokenCache = require('./lib/token-cache');
 exports.authenticate = auth.authenticate;
 exports.encodeJWT = auth.encodeJWT;
 exports.requestWithJWT = request.requestWithJWT;
-exports.resetCache = request.resetCache;

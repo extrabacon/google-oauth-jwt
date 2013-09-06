@@ -25,7 +25,21 @@ tokens, as well as built-in token caching.
 npm install google-oauth-jwt
 ```
 
-### Generating a key to sign the tokens
+### How does it work?
+
+When using Google APIs from the server (or any non-browser based application), authentication is performed through a
+Service Account, which is a special account representing your application. This account has a unique email address that
+can be used to grant permissions to. If a user wants to give access to his Google Drive to your application, he must share the files or folders with the Service Account.
+
+Now that the Service Account has permission to some user resources, the application can query the API with OAuth2.
+When using OAuth2, authentication is performed using a token that has been obtained first by submitting a JSON Web
+Token (JWT). The JWT identifies the user as well as the scope of the data he wish to access. The JWT is also signed
+with a cryptographic key to prevent tampering.
+
+The application request a token that can be used for authentication in exchange with a valid JWT. The resulting token
+can then be used for multiple API calls, until it expires and a new token must be obtained by submitting a JWT.
+
+### Creating a Service Account and the encryption key
 
 1. From the [Google API Console](https://code.google.com/apis/console/), create a
   [service account](https://developers.google.com/console/help/#service_accounts).
@@ -45,14 +59,14 @@ npm install google-oauth-jwt
 
 ### Granting access to resources to be requested through an API
 
-In order to query resources using the API, access must be granted to the service account. Each Google application that
+In order to query resources using the API, access must be granted to the Service Account. Each Google application that
 has security settings must be configured individually. Access is granted by assigning permissions to the service
 account, using its email address found in the API console.
 
 For example, in order to list files in Google Drive, folders and files must be shared with the service account email
 address. Likewise, to access a calendar, the calendar must be shared with the service account.
 
-### Querying a RESTful Google API with "request"
+### Querying Google APIs with "request"
 
 In this example, we use a modified instance of [request](https://github.com/mikeal/request) to query the
 Google Drive API. The modified request module handles the token automatically using a `jwt` setting passed to
@@ -143,7 +157,7 @@ googleAuth.encodeJWT({
 
 ### Specifying options
 
-The following options can be specified in order to generate the JWT:
+The following options can be specified in order to generate the JWT used for authentication:
 
 ```javascript
 var options = {
@@ -153,9 +167,8 @@ var options = {
   email: 'my-service-account@developer.gserviceaccount.com',
 
   // an array of scopes uris to request access to (required)
-  // different scopes are available for each application (refer to the app documentation)
-  // scopes are NOT permission levels, but limitations applied to the API access
-  // so remember to also grant permissions for the application!
+  // different scopes are available for each application, refer to the app documentation
+  // scopes are limitations applied to the API access
   scopes: [...],
 
   // the cryptographic key as a string, can be the contents of the PEM file
@@ -164,29 +177,27 @@ var options = {
 
   // the path to the PEM file to use for the cryptographic key (ignored if 'key' is also defined)
   // the key will be used to sign the JWT and validated by Google OAuth
-  keyFile: 'path_to/key.pem',
+  keyFile: 'path/to/key.pem',
 
   // the duration of the requested token in milliseconds (optional)
   // default is 1 hour (60 * 60 * 1000), which is the maximum allowed by Google
   expiration: 3600000,
 
   // if access is being granted on behalf of someone else, specifies who is impersonating the service account
-  delegationEmail: 'email_address@mycompany.com',
-
-  // turns on simple console logging for debugging
-  debug: false
+  delegationEmail: 'email_address@mycompany.com'
 
 };
 ```
 
 Options are used to encode the JWT that will be sent to Google OAuth servers in order to issue a token that can then be
-used for the APIs.
+used for authentification to Google APIs.
 
 For more information:
 [https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset](https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset)
 
 ## Changelog
 
+* 0.1.0: introduced unit tests and minor API improvements aimed at testability
 * 0.0.7: fixed token expiration check
 * 0.0.6: fixed request function call when using a URI string without options
 * 0.0.5: token now passed using Authorization header (thank you jpd236)

@@ -1,6 +1,6 @@
 {
 	"name": "google-oauth-jwt",
-	"version": "0.0.7",
+	"version": "0.1.0",
 	"author": {
 		"name": "Nicolas Mercier",
 		"email": "nicolas@extrabacon.net"
@@ -20,8 +20,11 @@
 		"request": "*"
 	},
 	"devDependencies": {
+    "underscore": "*",
+    "async": "*",
 		"mocha": "*",
-		"chai": "*"
+		"chai": "*",
+		"chai-spies": "*"
 	},
 	"repository": {
 		"type": "git",
