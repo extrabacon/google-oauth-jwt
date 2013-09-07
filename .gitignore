@@ -1,5 +1,4 @@
 *.pem
 .idea
 node_modules
-samples
 test/jwt-settings.json

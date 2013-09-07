@@ -29,33 +29,33 @@ npm install google-oauth-jwt
 
 When using Google APIs from the server (or any non-browser based application), authentication is performed through a
 Service Account, which is a special account representing your application. This account has a unique email address that
-can be used to grant permissions to. If a user wants to give access to his Google Drive to your application, he must share the files or folders with the Service Account.
+can be used to grant permissions to. If a user wants to give access to his Google Drive to your application, he must share the files or folders with the Service Account using the supplied email address.
 
 Now that the Service Account has permission to some user resources, the application can query the API with OAuth2.
 When using OAuth2, authentication is performed using a token that has been obtained first by submitting a JSON Web
-Token (JWT). The JWT identifies the user as well as the scope of the data he wish to access. The JWT is also signed
-with a cryptographic key to prevent tampering.
+Token (JWT). The JWT identifies the user as well as the scope of the data he wants access to. The JWT is also signed
+with a cryptographic key to prevent tampering. Google generates the key and keeps only the public key for validation.
+You must keep the private key secure with your application so that you can sign the JWT in order to guarantee its authenticity.
 
-The application request a token that can be used for authentication in exchange with a valid JWT. The resulting token
-can then be used for multiple API calls, until it expires and a new token must be obtained by submitting a JWT.
+The application requests a token that can be used for authentication in exchange with a valid JWT. The resulting token
+can then be used for multiple API calls, until it expires and a new token must be obtained by submitting another JWT.
 
-### Creating a Service Account and the encryption key
+### Creating a Service Account and generating the encryption key
 
-1. From the [Google API Console](https://code.google.com/apis/console/), create a
-  [service account](https://developers.google.com/console/help/#service_accounts).
+1. From the [Google API Console](https://code.google.com/apis/console/), create a [service account](https://developers.google.com/console/help/#service_accounts).
 
 2. Download the generated P12 key.
 
    IMPORTANT: keep a copy of the key, Google keeps only the public key.
 
-3. Convert the key to PEM, so we can use it from the Node crypto module.
+3. Convert the key to PEM, so we can use it from the Node [crypto](http://nodejs.org/api/crypto.html) module.
 
    To do this, run the following in Terminal:
    ```bash
    openssl pkcs12 -in downloaded-key-file.p12 -out your-key-file.pem -nodes
    ```
 
-   The password for the key is `notasecret`, as mentioned when you downloaded the key.
+   The password for the key is `notasecret`, as mentioned when you downloaded the key from Google.
 
 ### Granting access to resources to be requested through an API
 
@@ -69,8 +69,7 @@ address. Likewise, to access a calendar, the calendar must be shared with the se
 ### Querying Google APIs with "request"
 
 In this example, we use a modified instance of [request](https://github.com/mikeal/request) to query the
-Google Drive API. The modified request module handles the token automatically using a `jwt` setting passed to
-the `request` function.
+Google Drive API. `request` is a full-featured HTTP client which will be augmented with Google OAuth2 capabilities by using the `requestWithJWT` method. The modified module will request and cache tokens automatically when supplied with a `jwt` setting in the options.
 
 ```javascript
 // obtain a JWT-enabled version of request
@@ -92,8 +91,17 @@ request({
 ```
 
 Note that the `options` object includes a `jwt` object we use to configure how to encode the JWT. The token will then
-automatically be requested and inserted in the query string for this API call. It will also be cached and
+automatically be requested and inserted in the authorization header for this API call. It will also be cached and
 reused for subsequent calls using the same service account and scopes.
+
+If you want to use a specific version of `request`, simply pass it to the the `requestWithJWT` method as such:
+
+```javascript
+// my version of request
+var request = require('request');
+// my modified version of request
+request = require('google-oauth-jwt').requestWithJWT(request);
+```
 
 ### Requesting the token manually
 
@@ -136,7 +144,7 @@ tokens.get({
 Using `TokenCache` will request only one token for multiple concurrent requests to `get`. A new token request will
 automatically be issued if the token is expired.
 
-### Encoding JWT manually
+### Encoding the JWT manually
 
 It is also possible to encode the JWT manually using the `encodeJWT` method.
 
@@ -155,7 +163,7 @@ googleAuth.encodeJWT({
 });
 ```
 
-### Specifying options
+### Specifying JWT generation options
 
 The following options can be specified in order to generate the JWT used for authentication:
 
@@ -189,15 +197,50 @@ var options = {
 };
 ```
 
-Options are used to encode the JWT that will be sent to Google OAuth servers in order to issue a token that can then be
-used for authentification to Google APIs.
-
 For more information:
 [https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset](https://developers.google.com/accounts/docs/OAuth2ServiceAccount#formingclaimset)
 
+Options are used to encode the JWT that will be sent to Google OAuth servers in order to issue a token that can then be
+used for authentification to Google APIs. The same options are used for `authenticate`, `TokenCache.get` or the `jwt`
+setting passed to `request` options.
+
+## Running the tests
+
+Running the unit tests for `google-oauth-jwt` requires a valid Service Account, its encryption key and a URL to test.
+
+To launch the tests, first configure your account in "test/jwt-settings.json" using the sample file. Make sure your
+test URL also matches with the requested scopes. The tests do not make any assumption on the results from the API, so
+you can use any OAuth2 enabled API.
+
+For example, to run the tests by listing Google Drive files, you can use the following configuration:
+
+```javascript
+{
+  "email": "my-account@developer.gserviceaccount.com",
+  "scopes": ["https://www.googleapis.com/auth/drive.readonly"],
+  "keyFile": "./test/key.pem",
+  "test_url": "https://www.googleapis.com/drive/v2/files"
+}
+```
+
+To run the tests:
+
+```bash
+npm test
+```
+
+or
+
+```bash
+mocha -t 5000
+```
+
+The 5 seconds timeout is required since some tests make multiple calls to the API. If you get timeout exceeded errors,
+you can bump this value since not all Google APIs may respond with the same timings.
+
 ## Changelog
 
-* 0.1.0: introduced unit tests and minor API improvements aimed at testability
+* 0.1.0: improved documentation, introduced unit tests and refactoring aimed at testability
 * 0.0.7: fixed token expiration check
 * 0.0.6: fixed request function call when using a URI string without options
 * 0.0.5: token now passed using Authorization header (thank you jpd236)

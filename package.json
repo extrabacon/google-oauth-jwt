@@ -26,6 +26,9 @@
 		"chai": "*",
 		"chai-spies": "*"
 	},
+	"scripts": {
+		"test": "mocha test/*.js -t 5000"
+	},
 	"repository": {
 		"type": "git",
 		"url": "http://github.com/extrabacon/google-oauth-jwt"
