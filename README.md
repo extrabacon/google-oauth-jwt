@@ -69,7 +69,7 @@ address. Likewise, to access a calendar, the calendar must be shared with the se
 ### Querying Google APIs with "request"
 
 In this example, we use a modified instance of [request](https://github.com/mikeal/request) to query the
-Google Drive API. `request` is a full-featured HTTP client which will be augmented with Google OAuth2 capabilities by using the `requestWithJWT` method. The modified module will request and cache tokens automatically when supplied with a `jwt` setting in the options.
+Google Drive API. [request](https://github.com/mikeal/request) is a full-featured HTTP client which can be extended with Google OAuth2 capabilities by using the `requestWithJWT` method. The modified module will request and cache tokens automatically when supplied with a `jwt` setting in the options.
 
 ```javascript
 // obtain a JWT-enabled version of request
@@ -90,9 +90,8 @@ request({
 });
 ```
 
-Note that the `options` object includes a `jwt` object we use to configure how to encode the JWT. The token will then
-automatically be requested and inserted in the authorization header for this API call. It will also be cached and
-reused for subsequent calls using the same service account and scopes.
+Note that the `options` object includes a `jwt` object we use to configure the JWT generation. The token will then
+automatically be requested and inserted in the authorization header. It will also be cached and reused for subsequent calls using the same service account and scopes.
 
 If you want to use a specific version of `request`, simply pass it to the the `requestWithJWT` method as such:
 
@@ -238,8 +237,20 @@ mocha -t 5000
 The 5 seconds timeout is required since some tests make multiple calls to the API. If you get timeout exceeded errors,
 you can bump this value since not all Google APIs may respond with the same timings.
 
+## Debugging
+
+To turn on debugging, add "google-oauth-jwt" to your `DEBUG` variable. Debugging events include JWT generation, token
+requests to the OAuth server and token expirations through `TokenCache`.
+
+For example, to turn on debugging while running the unit tests, use this:
+
+```bash
+DEBUG=google-oauth-jwt mocha -t 5000
+```
+
 ## Changelog
 
+* 0.1.1: re-introduced debugging, now with [debug](https://github.com/visionmedia/debug)
 * 0.1.0: improved documentation, introduced unit tests and refactoring aimed at testability
 * 0.0.7: fixed token expiration check
 * 0.0.6: fixed request function call when using a URI string without options

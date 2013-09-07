@@ -1,41 +1,42 @@
 {
-	"name": "google-oauth-jwt",
-	"version": "0.1.0",
-	"author": {
-		"name": "Nicolas Mercier",
-		"email": "nicolas@extrabacon.net"
-	},
-	"description": "Implementation of Google OAuth 2.0 for server-to-server interactions, allowing secure use of Google APIs without interaction from an end-user.",
-	"keywords": [
-		"google",
-		"api",
-		"oauth",
-		"oauth2",
-		"service account",
-		"jwt",
-		"token",
-		"server to server"
-	],
-	"dependencies": {
-		"request": "*"
-	},
-	"devDependencies": {
+  "name": "google-oauth-jwt",
+  "version": "0.1.0",
+  "author": {
+    "name": "Nicolas Mercier",
+    "email": "nicolas@extrabacon.net"
+  },
+  "description": "Implementation of Google OAuth 2.0 for server-to-server interactions, allowing secure use of Google APIs without interaction from an end-user.",
+  "keywords": [
+    "google",
+    "api",
+    "oauth",
+    "oauth2",
+    "service account",
+    "jwt",
+    "token",
+    "server to server"
+  ],
+  "dependencies": {
+    "request": "*",
+    "debug": "~0.7.2"
+  },
+  "devDependencies": {
     "underscore": "*",
     "async": "*",
-		"mocha": "*",
-		"chai": "*",
-		"chai-spies": "*"
-	},
-	"scripts": {
-		"test": "mocha test/*.js -t 5000"
-	},
-	"repository": {
-		"type": "git",
-		"url": "http://github.com/extrabacon/google-oauth-jwt"
-	},
-	"homepage": "http://github.com/extrabacon/google-oauth-jwt",
-	"bugs": "http://github.com/extrabacon/google-oauth-jwt/issues",
-	"engines": {
-		"node": ">=0.8"
-	}
+    "mocha": "*",
+    "chai": "*",
+    "chai-spies": "*"
+  },
+  "scripts": {
+    "test": "mocha test/*.js -t 5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/extrabacon/google-oauth-jwt"
+  },
+  "homepage": "http://github.com/extrabacon/google-oauth-jwt",
+  "bugs": "http://github.com/extrabacon/google-oauth-jwt/issues",
+  "engines": {
+    "node": ">=0.8"
+  }
 }
