@@ -250,6 +250,7 @@ DEBUG=google-oauth-jwt mocha -t 5000
 
 ## Changelog
 
+* 0.1.2: better integration with `request` providing JWT support in helper methods as well (ex: `request.post`)
 * 0.1.1: re-introduced debugging, now with [debug](https://github.com/visionmedia/debug)
 * 0.1.0: improved documentation, introduced unit tests and refactoring aimed at testability
 * 0.0.7: fixed token expiration check

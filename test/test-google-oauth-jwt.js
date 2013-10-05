@@ -208,6 +208,24 @@ describe('TokenCache', function () {
 });
 
 describe('requestWithJWT', function () {
+	
+	it('should return a request function with helper methods', function () {
+		var request = moduleToTest.requestWithJWT();
+		expect(request).to.be.a.function;
+		expect(request.get).to.be.a.function;
+		expect(request.post).to.be.a.function;
+		expect(request.put).to.be.a.function;
+		expect(request.del).to.be.a.function;
+		expect(request.defaults).to.be.a.function;
+	});
+		
+	it('should work normally, without jwt settings', function (done) {
+		var request = moduleToTest.requestWithJWT();
+		request('http://www.google.com/', function (err, res) {
+			expect(res.statusCode).to.equal(200);
+			done(err);
+		});
+	});
 
 	it('should request a token automatically', function (done) {
 		
@@ -217,8 +235,14 @@ describe('requestWithJWT', function () {
 		
 		var request = moduleToTest.requestWithJWT(tokens);
 		
-		// test with 2 variants of calls to request
+		// test multiple variants of calls to request
 		async.parallel({
+			get_helper: function (next) {
+				request.get(jwt_settings.test_url, { jwt: jwtSettings() }, function (err, res, body) {
+					expect(res.statusCode).to.equal(200);
+					next(err);
+				});
+			},
 			with_url_and_options: function (next) {
 				request(jwt_settings.test_url, { jwt: jwtSettings() }, function (err, res, body) {
 					expect(res.statusCode).to.equal(200);
