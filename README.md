@@ -40,22 +40,29 @@ You must keep the private key secure with your application so that you can sign 
 The application requests a token that can be used for authentication in exchange with a valid JWT. The resulting token
 can then be used for multiple API calls, until it expires and a new token must be obtained by submitting another JWT.
 
-### Creating a Service Account and generating the encryption key
+### Creating a Service Account using the Google Developers Console
 
-1. From the [Google API Console](https://code.google.com/apis/console/), create a [service account](https://developers.google.com/console/help/#service_accounts).
+1. From the [Google Developers Console](https://cloud.google.com/console), select your project or create a new one.
 
-2. Download the generated P12 key.
+2. Under "APIs & auth", click "Credentials".
 
-   IMPORTANT: keep a copy of the key, Google keeps only the public key.
+3. Under "OAuth", click the "Create new client ID" button.
 
-3. Convert the key to PEM, so we can use it from the Node [crypto](http://nodejs.org/api/crypto.html) module.
+4. Select "Service account" as the application type and click "Create Client ID".
+
+5. The key for your new service account should prompt for download automatically. Note that your key is protected with a password.
+   IMPORTANT: keep a secure copy of the key, as Google keeps only the public key.
+
+6. Convert the downloaded key to PEM, so we can use it from the Node [crypto](http://nodejs.org/api/crypto.html) module.
 
    To do this, run the following in Terminal:
    ```bash
    openssl pkcs12 -in downloaded-key-file.p12 -out your-key-file.pem -nodes
    ```
 
-   The password for the key is `notasecret`, as mentioned when you downloaded the key from Google.
+   You will be asked for the password you received during step 5.
+
+That's it! You now have a service account with an email address and a key that you can use from your Node application.
 
 ### Granting access to resources to be requested through an API
 
@@ -247,19 +254,6 @@ For example, to turn on debugging while running the unit tests, use this:
 ```bash
 DEBUG=google-oauth-jwt mocha -t 5000
 ```
-
-## Changelog
-
-* 0.1.2: better integration with `request` providing JWT support in helper methods as well (ex: `request.post`)
-* 0.1.1: re-introduced debugging, now with [debug](https://github.com/visionmedia/debug)
-* 0.1.0: improved documentation, introduced unit tests and refactoring aimed at testability
-* 0.0.7: fixed token expiration check
-* 0.0.6: fixed request function call when using a URI string without options
-* 0.0.5: token now passed using Authorization header (thank you jpd236)
-* 0.0.4: fixed pending callbacks accumulating indefinitely in TokenCache
-* 0.0.3: introduction of TokenCache
-* 0.0.2: improved error handling and documentation
-* 0.0.1: initial version
 
 ## Compatibility
 
