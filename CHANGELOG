@@ -1,0 +1,46 @@
+0.1.3
+=====
+* Revisited documentation to update instructions for use with the new Google Developers Console.
+* Moved change history to a new CHANGELOG file
+
+0.1.2
+=====
+Better integration with `request` providing JWT support in helper methods as well (ex: `request.post`).
+
+0.1.1
+=====
+Re-introduced debugging, now with [debug](https://github.com/visionmedia/debug).
+
+0.1.0
+=====
+* Improved documentation
+* Introduced unit tests
+* Refactoring aimed at testability
+
+0.0.7
+=====
+Fixed token expiration check.
+
+0.0.6
+=====
+Fixed `request` function call when using a URI string without options.
+
+0.0.5
+=====
+Token is now passed using the `Authorization` header (thanks to [https://github.com/jpd236](jpd236)).
+
+0.0.4
+=====
+Fixed pending callbacks accumulating indefinitely in TokenCache.
+
+0.0.3
+=====
+Introduction of TokenCache, preventing the need to constantly request a new token or caching it manually. TokenCache handles expiration automatically.
+
+0.0.2
+=====
+Vastly improved error handling and documentation.
+
+0.0.1
+=====
+Initial release.
