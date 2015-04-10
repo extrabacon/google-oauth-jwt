@@ -1,3 +1,9 @@
+0.1.5
+=====
+* Fixed: request plugin on version 2.55.1+ (https://github.com/extrabacon/google-oauth-jwt/issues/14)
+* Fixed: some unit tests are failing on Node 0.12 (https://github.com/extrabacon/google-oauth-jwt/issues/13)
+* Cache key now includes the delegation email, if specified
+
 0.1.4
 =====
 Fixed: reset state after authentication failure (https://github.com/extrabacon/google-oauth-jwt/pull/6)
