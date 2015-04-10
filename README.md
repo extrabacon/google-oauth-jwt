@@ -257,12 +257,7 @@ DEBUG=google-oauth-jwt mocha -t 5000
 
 ## Compatibility
 
-+ Tested with Node 0.8
-+ Tested on Mac OS X 10.8
-
-## Dependencies
-
-+ [request](https://github.com/mikeal/request)
++ Tested with Node 0.10 and 0.12
 
 ## License
 

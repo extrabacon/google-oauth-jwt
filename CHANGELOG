@@ -1,3 +1,7 @@
+0.1.6
+=====
+Request plugin is no longer compatible with older versions, forcing version >= 2.55
+
 0.1.5
 =====
 * Fixed: request plugin on version 2.55.1+ (https://github.com/extrabacon/google-oauth-jwt/issues/14)
