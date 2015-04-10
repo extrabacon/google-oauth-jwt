@@ -6,7 +6,7 @@ var moduleToTest = require('..'),
 	spies = require('chai-spies'),
 	expect = chai.expect,
 	jwt_settings = require('./jwt-settings.json');
-	
+
 console.log('WARNING: running these tests require a per-user configuration!!');
 console.log('To specify your configuration, copy `jwt-settings.json.sample` to `jwt-settings.json`');
 console.log('\nMake sure that your service account is setup, has been granted access to the requested scopes, and that you have converted your key to PEM');
@@ -18,14 +18,14 @@ function jwtSettings(settings) {
 }
 
 describe('encodeJWT()', function () {
-	
+
 	it('should sign a token with a string-based key', function (done) {
-		
+
 		// read the key from the file
 		var key = ''+fs.readFileSync(jwt_settings.keyFile);
 		expect(key).to.not.be.null.and.to.be.a.string;
 		expect(key).to.have.length.above(1);
-		
+
 		moduleToTest.encodeJWT(jwtSettings({ key: key }), function (err, jwt) {
 			if (err) throw err;
 			expect(jwt).to.not.be.null.and.to.be.a.string;
@@ -43,7 +43,7 @@ describe('encodeJWT()', function () {
 			done();
 		});
 	});
-	
+
 	it('should fail when options are missing or invalid', function () {
 		function encodeJWT(settings) {
 			return function () {
@@ -58,7 +58,7 @@ describe('encodeJWT()', function () {
 		expect(encodeJWT({ email: 'email', key: 'key', scopes: '' })).to.throw(/scopes/);
 		expect(encodeJWT({ email: 'email', key: 'key', scopes: [] })).to.throw(/scopes/);
 	});
-	
+
 	it('should fail when signing with an invalid key', function (done) {
 		moduleToTest.encodeJWT(jwtSettings({ key: 'this is not a key' }), function (err, jwt) {
 			expect(err).to.be.an.instanceOf(Error);
@@ -79,7 +79,7 @@ describe('authenticate()', function () {
 			done();
 		});
 	});
-	
+
 	it('should fail for an invalid request', function (done) {
 		moduleToTest.authenticate(jwtSettings({ email: 'invalid email!' }), function (err, token) {
 			expect(err).to.be.an.instanceOf(Error);
@@ -91,17 +91,17 @@ describe('authenticate()', function () {
 });
 
 describe('TokenCache', function () {
-	
+
 	var fakeAuth = function (options, callback) {
 		callback(null, 'fake_token');
 	};
-	
+
 	describe('get()', function () {
 
 		it('should request a token on first call', function (done) {
 			var tokens = new moduleToTest.TokenCache();
 			tokens.authenticate = chai.spy(fakeAuth);
-			
+
 			tokens.get(jwtSettings(), function (err, token) {
 				if (err) throw err;
 				expect(tokens.authenticate).to.have.been.called.once;
@@ -111,14 +111,14 @@ describe('TokenCache', function () {
 		});
 
 		it('should reuse a token on subsequent calls', function (done) {
-			
+
 			var tokens = new moduleToTest.TokenCache();
 			tokens.authenticate = chai.spy(fakeAuth);
-			
+
 			tokens.get(jwtSettings(), function (err, firstToken) {
 				if (err) throw err;
 				expect(tokens.authenticate).to.have.been.called.once;
-				
+
 				// request tokens at different intervals
 				async.each([100, 200, 500], function (interval, next) {
 					setTimeout(function () {
@@ -130,16 +130,16 @@ describe('TokenCache', function () {
 						});
 					}, interval);
 				}, done);
-								
+
 			});
 		});
-		
+
 		it('should issue only one request on concurrent calls', function (done) {
-			
+
 			var tokens = new moduleToTest.TokenCache();
 			tokens.authenticate = chai.spy(fakeAuth);
 			tokens.get = chai.spy(tokens.get);
-			
+
 			// make 5 simultaneous calls on an empty cache - only one should make the request
 			async.parallel([
 				function (next) { tokens.get(jwt_settings, next) },
@@ -156,15 +156,15 @@ describe('TokenCache', function () {
 				});
 				done();
 			});
-			
+
 		});
-		
+
 		it('should discard an expired token and request another one', function (done) {
-			
+
 			var settings = jwtSettings({ expiration: 500 });
 			var tokens = new moduleToTest.TokenCache();
 			tokens.authenticate = chai.spy(fakeAuth);
-			
+
 			async.auto({
 				initial_request: function (next) {
 					// this token should expire after 500ms
@@ -184,17 +184,17 @@ describe('TokenCache', function () {
 					});
 				}]
 			}, done);
-			
+
 		});
 	});
-	
+
 	describe('clear()', function () {
 
 		it('should remove previously requested tokens', function (done) {
-			
+
 			var tokens = new moduleToTest.TokenCache();
 			expect(_.keys(tokens._cache)).to.be.empty;
-			
+
 			tokens.get(jwtSettings(), function (err, token) {
 				if (err) throw err;
 				expect(_.keys(tokens._cache)).to.have.length(1);
@@ -202,13 +202,13 @@ describe('TokenCache', function () {
 				expect(_.keys(tokens._cache)).to.be.empty;
 				done();
 			});
-			
+
 		});
 	});
 });
 
 describe('requestWithJWT', function () {
-	
+
 	it('should return a request function with helper methods', function () {
 		var request = moduleToTest.requestWithJWT();
 		expect(request).to.be.a.function;
@@ -218,7 +218,7 @@ describe('requestWithJWT', function () {
 		expect(request.del).to.be.a.function;
 		expect(request.defaults).to.be.a.function;
 	});
-		
+
 	it('should work normally, without jwt settings', function (done) {
 		var request = moduleToTest.requestWithJWT();
 		request('http://www.google.com/', function (err, res) {
@@ -228,13 +228,13 @@ describe('requestWithJWT', function () {
 	});
 
 	it('should request a token automatically', function (done) {
-		
+
 		var tokens = new moduleToTest.TokenCache();
 		tokens.get = chai.spy(tokens.get);
 		tokens.authenticate = chai.spy(tokens.authenticate);
-		
+
 		var request = moduleToTest.requestWithJWT(tokens);
-		
+
 		// test multiple variants of calls to request
 		async.parallel({
 			get_helper: function (next) {
@@ -260,23 +260,23 @@ describe('requestWithJWT', function () {
 			}
 		}, function (err) {
 			if (err) throw err;
-			expect(tokens.get).to.have.been.called.twice;
+			expect(tokens.get).to.have.been.called.exactly(3);
 			expect(tokens.authenticate).to.have.been.called.once;
 			done();
 		});
-		
+
 	});
-	
+
 	it('should use a global token cache', function (done) {
-		
+
 		var tokens = moduleToTest.TokenCache.global;
 		tokens.get = chai.spy(tokens.get);
 		tokens.authenticate = chai.spy(tokens.authenticate);
-		
+
 		// clear the global cache in case it has been used by other tests
 		tokens.clear();
 		expect(_.keys(tokens._cache)).to.have.length(0);
-		
+
 		function requestWithoutTokenCache(next) {
 			// use a new instance each time
 			var request = moduleToTest.requestWithJWT();
@@ -288,7 +288,7 @@ describe('requestWithJWT', function () {
 				next(err);
 			});
 		}
-		
+
 		// perform 3 simultaneous requests with 3 separate instances - the same cache should be used
 		async.parallel([
 			requestWithoutTokenCache,
@@ -301,7 +301,7 @@ describe('requestWithJWT', function () {
 			expect(tokens.authenticate).to.have.been.called.once;
 			done();
 		});
-		
+
 	});
-	
+
 });
