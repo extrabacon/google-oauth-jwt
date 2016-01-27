@@ -109,6 +109,44 @@ var request = require('request');
 request = require('google-oauth-jwt').requestWithJWT(request);
 ```
 
+### Piping the Response
+
+If you provide a `res` argument as a part of parameters, and `res` is a [WritableStream](https://nodejs.org/api/stream.html#stream_class_stream_writable) then the response will automatically piped to that stream.
+
+For large JSON bodies, piping to a stream and processing on the go is much performant than caching the response in the memory. This is especially important if your service will be accessed by many concurrent users, as you would not to block the main thread by parsing large JSON strings, only to send them back to the client.
+
+Here’s a slightly modified example that pipes directly to the response stream:
+
+```javascript
+/**
+ * A restify route that handles the google analytics response.
+ *
+ * @param req - The HTTP request.
+ * @param res - The HTTP response.
+ * @param next - Notifies the next handler in the chain.
+ */
+function fetchAnalytics(req, res, next) {
+  // obtain a JWT-enabled version of request
+  var request = require('google-oauth-jwt').requestWithJWT();
+    
+  request({      
+    url: 'https://www.googleapis.com/drive/v2/files',
+    
+    // This will pipe the API output directly to the response object.
+    res: res,
+    
+    jwt: {
+      // use the email address of the service account, as seen in the API console
+      email: 'my-service-account@developer.gserviceaccount.com',
+      // use the PEM file we generated from the downloaded key
+      keyFile: 'my-service-account-key.pem',
+      // specify the scopes you wish to access - each application has different scopes
+      scopes: ['https://www.googleapis.com/auth/drive.readonly']
+    }
+  });
+}
+```
+
 ### Requesting the token manually
 
 If you wish to simply request the token for use with a Google API, use the `authenticate` method.
