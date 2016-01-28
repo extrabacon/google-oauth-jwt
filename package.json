@@ -36,6 +36,7 @@
   },
   "homepage": "http://github.com/extrabacon/google-oauth-jwt",
   "bugs": "http://github.com/extrabacon/google-oauth-jwt/issues",
+  "license": "MIT",
   "engines": {
     "node": ">=0.8"
   }
