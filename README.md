@@ -257,7 +257,7 @@ DEBUG=google-oauth-jwt mocha -t 5000
 
 ## Compatibility
 
-+ Tested with Node 0.10 and 0.12
++ Tested with Node 0.10, 0.12, 4.2, 5.5
 
 ## License
 
