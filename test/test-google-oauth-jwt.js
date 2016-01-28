@@ -209,16 +209,6 @@ describe('TokenCache', function () {
 
 describe('requestWithJWT', function () {
 
-	it('should return a request function with helper methods', function () {
-		var request = moduleToTest.requestWithJWT();
-		expect(request).to.be.a.function;
-		expect(request.get).to.be.a.function;
-		expect(request.post).to.be.a.function;
-		expect(request.put).to.be.a.function;
-		expect(request.del).to.be.a.function;
-		expect(request.defaults).to.be.a.function;
-	});
-
 	it('should work normally, without jwt settings', function (done) {
 		var request = moduleToTest.requestWithJWT();
 		request('http://www.google.com/', function (err, res) {
